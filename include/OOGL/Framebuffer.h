@@ -1,26 +1,26 @@
 ///////////////////////////////////////////////////////////////////////////////////
 //
-// Copyright (C) 2014 Rick Taylor
+// Copyright (C) 2016 Rick Taylor
 //
-// This file is part of the Indigo boardgame engine.
+// This file is part of OOGL, the Omega Online OpenGL library.
 //
 // OOGL is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
+// it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
 // OOGL is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// GNU Lesser General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
+// You should have received a copy of the GNU Lesser General Public License
 // along with OOGL.  If not, see <http://www.gnu.org/licenses/>.
 //
 ///////////////////////////////////////////////////////////////////////////////////
 
-#ifndef INDIGO_FRAMEBUFFER_H_INCLUDED
-#define INDIGO_FRAMEBUFFER_H_INCLUDED
+#ifndef OOGL_FRAMEBUFFER_H_INCLUDED
+#define OOGL_FRAMEBUFFER_H_INCLUDED
 
 #include "State.h"
 
@@ -49,4 +49,4 @@ namespace OOGL
 	};
 }
 
-#endif // INDIGO_FRAMEBUFFER_H_INCLUDED
+#endif // OOGL_FRAMEBUFFER_H_INCLUDED
