@@ -38,6 +38,7 @@ liboogl_la_CPPFLAGS = -I./oobase/include -I../oobase/include
 
 liboogl_la_CFLAGS = $(PTHREAD_CFLAGS)
 liboogl_la_CXXFLAGS = $(PTHREAD_CFLAGS)
+liboogl_la_LDFLAGS = $(PTHREAD_LIBS)
 
 liboogl_la_LIBADD = -lglfw -lGL
 

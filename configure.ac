@@ -31,8 +31,6 @@ AM_CONDITIONAL([WIN32],[test "x$win32" = "xtrue"])
 AC_ARG_ENABLE([debug],AS_HELP_STRING([--enable-debug],[Turn on debugging]),[debug=true],[debug=false])
 AM_CONDITIONAL([DEBUG], [test "x$debug" = "xtrue"])
 
-AC_PROG_RANLIB
-
 OO_PROG_CC
 OO_PROG_CXX
 
