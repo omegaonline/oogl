@@ -21,6 +21,7 @@
 
 #include "../include/OOGL/Framebuffer.h"
 #include "../include/OOGL/Window.h"
+#include "../include/OOGL/StateFns.h"
 
 OOGL::Framebuffer::Framebuffer() :
 		m_id(GL_INVALID_VALUE),

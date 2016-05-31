@@ -1,10 +1,9 @@
 #ifndef OOGL_VERTEXARRAYOBJECT_H_INCLUDED
 #define OOGL_VERTEXARRAYOBJECT_H_INCLUDED
 
-#include <OOBase/SharedPtr.h>
-#include <OOBase/Table.h>
-
 #include "OOGL.h"
+
+#include <OOBase/Table.h>
 
 namespace OOGL
 {

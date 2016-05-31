@@ -24,8 +24,6 @@
 
 //////////////////////////////////////////////
 
-#include <OOBase/Base.h>
-
 #if defined(_MSC_VER)
 	//#include "Config_msvc.h"
 #elif defined(HAVE_CONFIG_H)
@@ -34,6 +32,8 @@
 #else
 #error Need some kind of configure scipt!
 #endif
+
+#include <OOBase/SharedPtr.h>
 
 #define GL_GLEXT_LEGACY
 #include <GLFW/glfw3.h>

@@ -19,13 +19,15 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////
 
-#include <OOBase/Logger.h>
-
+#include "../include/OOGL/StateFns.h"
+#include "../include/OOGL/State.h"
 #include "../include/OOGL/BufferObject.h"
 #include "../include/OOGL/Shader.h"
 #include "../include/OOGL/Texture.h"
 #include "../include/OOGL/VertexArrayObject.h"
 #include "../include/OOGL/Window.h"
+
+#include <OOBase/Logger.h>
 
 namespace
 {

@@ -22,14 +22,16 @@
 #ifndef OOGL_WINDOW_H_INCLUDED
 #define OOGL_WINDOW_H_INCLUDED
 
-#include <OOBase/Delegate.h>
+#include "OOGL.h"
 
-#include "Framebuffer.h"
-#include "State.h"
-#include "StateFns.h"
+#include <OOBase/Delegate.h>
 
 namespace OOGL
 {
+	class State;
+	class StateFns;
+	class Framebuffer;
+
 	class Window : public OOBase::NonCopyable
 	{
 		friend class State;

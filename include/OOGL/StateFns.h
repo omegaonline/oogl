@@ -22,8 +22,6 @@
 #ifndef OOGL_STATE_FNS_H_INCLUDED
 #define OOGL_STATE_FNS_H_INCLUDED
 
-#include <OOBase/SharedPtr.h>
-
 #include "OOGL.h"
 
 namespace OOGL
@@ -32,6 +30,7 @@ namespace OOGL
 	class BufferObject;
 	class VertexArrayObject;
 	class Texture;
+	class Program;
 
 	class StateFns : public OOBase::NonCopyable
 	{
@@ -403,4 +402,4 @@ namespace OOGL
 	};
 }
 
-#endif // OOGL_STATE_H_INCLUDED
+#endif // OOGL_STATE_FNS_H_INCLUDED

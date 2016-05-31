@@ -22,8 +22,6 @@
 #ifndef OOGL_BUFFEROBJECT_H_INCLUDED
 #define OOGL_BUFFEROBJECT_H_INCLUDED
 
-#include <OOBase/SharedPtr.h>
-
 #include "OOGL.h"
 
 namespace OOGL

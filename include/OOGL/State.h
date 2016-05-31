@@ -22,12 +22,11 @@
 #ifndef OOGL_STATE_H_INCLUDED
 #define OOGL_STATE_H_INCLUDED
 
-#include <OOBase/SharedPtr.h>
-#include <OOBase/Table.h>
+#include "OOGL.h"
+
+#include <OOBase/Vector.h>
 #include <OOBase/HashTable.h>
 #include <OOBase/List.h>
-
-#include "OOGL.h"
 
 namespace OOGL
 {

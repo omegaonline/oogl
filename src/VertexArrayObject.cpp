@@ -20,8 +20,8 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 #include "../include/OOGL/VertexArrayObject.h"
-#include "../include/OOGL/BufferObject.h"
 #include "../include/OOGL/State.h"
+#include "../include/OOGL/BufferObject.h"
 #include "../include/OOGL/StateFns.h"
 
 OOGL::VertexArrayObject::VertexArrayObject() : m_array(0)

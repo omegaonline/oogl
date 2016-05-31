@@ -20,6 +20,9 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 #include "../include/OOGL/Window.h"
+#include "../include/OOGL/State.h"
+#include "../include/OOGL/StateFns.h"
+#include "../include/OOGL/Framebuffer.h"
 
 #include <OOBase/Logger.h>
 

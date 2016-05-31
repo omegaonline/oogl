@@ -22,10 +22,10 @@
 #ifndef OOGL_SHADER_H_INCLUDED
 #define OOGL_SHADER_H_INCLUDED
 
+#include "OOGL.h"
+
 #include <OOBase/String.h>
 #include <OOBase/Table.h>
-
-#include "OOGL.h"
 
 namespace OOGL
 {

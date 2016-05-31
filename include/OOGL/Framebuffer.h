@@ -22,10 +22,12 @@
 #ifndef OOGL_FRAMEBUFFER_H_INCLUDED
 #define OOGL_FRAMEBUFFER_H_INCLUDED
 
-#include "State.h"
+#include "OOGL.h"
 
 namespace OOGL
 {
+	class State;
+
 	class Framebuffer : public OOBase::NonCopyable
 	{
 		friend class OOBase::AllocateNewStatic<OOBase::ThreadLocalAllocator>;
