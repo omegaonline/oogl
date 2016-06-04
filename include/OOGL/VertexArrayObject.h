@@ -26,7 +26,7 @@ namespace OOGL
 		OOBase::SharedPtr<OOGL::VertexArrayObject> bind();
 		OOBase::SharedPtr<OOGL::VertexArrayObject> unbind();
 
-		void attribute(GLuint index, const OOBase::SharedPtr<BufferObject>& buffer, GLint components, GLenum type, GLsizei stride = 0, GLsizeiptr offset = 0);
+		void attribute_i(GLuint index, const OOBase::SharedPtr<BufferObject>& buffer, GLint components, GLenum type, GLsizei stride = 0, GLsizeiptr offset = 0);
 		void attribute(GLuint index, const OOBase::SharedPtr<BufferObject>& buffer, GLint components, GLenum type, bool normalized, GLsizei stride = 0, GLsizeiptr offset = 0);
 
 		void attribute_divisor(GLuint index, GLuint divisor);

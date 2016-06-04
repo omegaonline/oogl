@@ -59,7 +59,7 @@ OOBase::SharedPtr<OOGL::VertexArrayObject> OOGL::VertexArrayObject::unbind()
 	return State::get_current()->unbind_vao();
 }
 
-void OOGL::VertexArrayObject::attribute(GLuint index, const OOBase::SharedPtr<BufferObject>& buffer, GLint components, GLenum type, GLsizei stride, GLsizeiptr offset)
+void OOGL::VertexArrayObject::attribute_i(GLuint index, const OOBase::SharedPtr<BufferObject>& buffer, GLint components, GLenum type, GLsizei stride, GLsizeiptr offset)
 {
 	OOBase::SharedPtr<State> ptrState = State::get_current();
 
