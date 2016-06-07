@@ -39,7 +39,7 @@ void OOGL::glCheckError(const char* fn, const char* file, unsigned int line)
 		OOBase::Logger::log(OOBase::Logger::Information,"%s",fn);*/
 }
 
-OOGL::State::State(StateFns& fns) :
+OOGL::State::State(const OOBase::SharedPtr<StateFns>& fns) :
 		m_state_fns(fns),
 		m_active_texture_unit(0)
 {
@@ -125,7 +125,7 @@ OOBase::SharedPtr<OOGL::Framebuffer> OOGL::State::bind(GLenum target, const OOBa
 			m_read_fb = fb;
 
 			if (fb)
-				m_state_fns.glBindFramebuffer(GL_FRAMEBUFFER,fb->m_id);
+				m_state_fns->glBindFramebuffer(GL_FRAMEBUFFER,fb->m_id);
 		}
 	}
 	else if (target == GL_DRAW_FRAMEBUFFER)
@@ -136,7 +136,7 @@ OOBase::SharedPtr<OOGL::Framebuffer> OOGL::State::bind(GLenum target, const OOBa
 			m_draw_fb = fb;
 
 			if (fb)
-				m_state_fns.glBindFramebuffer(GL_DRAW_FRAMEBUFFER,fb->m_id);
+				m_state_fns->glBindFramebuffer(GL_DRAW_FRAMEBUFFER,fb->m_id);
 		}
 	}
 	else if (target == GL_READ_FRAMEBUFFER)
@@ -147,7 +147,7 @@ OOBase::SharedPtr<OOGL::Framebuffer> OOGL::State::bind(GLenum target, const OOBa
 			m_read_fb = fb;
 
 			if (fb)
-				m_state_fns.glBindFramebuffer(GL_READ_FRAMEBUFFER,fb->m_id);
+				m_state_fns->glBindFramebuffer(GL_READ_FRAMEBUFFER,fb->m_id);
 		}
 	}
 
@@ -159,7 +159,7 @@ GLuint OOGL::State::activate_texture_unit(GLuint unit)
 	GLuint prev = m_active_texture_unit;
 	if (unit != m_active_texture_unit)
 	{
-		m_state_fns.glActiveTexture(unit);
+		m_state_fns->glActiveTexture(unit);
 		m_active_texture_unit = unit;
 	}
 
@@ -192,7 +192,7 @@ OOBase::SharedPtr<OOGL::Texture> OOGL::State::bind(GLuint unit, const OOBase::Sh
 		{
 			LOG_WARNING(("Failed to resize texture unit cache"));
 
-			m_state_fns.glBindTextureUnit(*this,unit,texture->m_target,texture->m_tex);
+			m_state_fns->glBindTextureUnit(*this,unit,texture->m_target,texture->m_tex);
 			
 			return prev;
 		}
@@ -202,7 +202,7 @@ OOBase::SharedPtr<OOGL::Texture> OOGL::State::bind(GLuint unit, const OOBase::Sh
 	tex_unit_t::iterator i = tu->find(texture->target());
 	if (!i)
 	{
-		m_state_fns.glBindTextureUnit(*this,unit,texture->m_target,texture->m_tex);
+		m_state_fns->glBindTextureUnit(*this,unit,texture->m_target,texture->m_tex);
 
 		tex_pair p;
 		p.texture = texture->m_tex;
@@ -218,7 +218,7 @@ OOBase::SharedPtr<OOGL::Texture> OOGL::State::bind(GLuint unit, const OOBase::Sh
 		{
 			if (i->second.texture != texture->m_tex)
 			{
-				m_state_fns.glBindTextureUnit(*this,unit,texture->m_target,texture->m_tex);
+				m_state_fns->glBindTextureUnit(*this,unit,texture->m_target,texture->m_tex);
 
 				i->second.texture = texture->m_tex;
 			}
@@ -270,7 +270,7 @@ void OOGL::State::bind_texture(GLuint texture, GLenum target)
 
 	if (bind)
 	{
-		m_state_fns.glBindTextureUnit(*this,m_active_texture_unit,target,texture);
+		m_state_fns->glBindTextureUnit(*this,m_active_texture_unit,target,texture);
 	}
 }
 
@@ -300,9 +300,9 @@ OOBase::SharedPtr<OOGL::BufferObject> OOGL::State::bind_buffer_target(const OOBa
 	if (!i)
 	{
 		if (buffer_object)
-			m_state_fns.glBindBuffer(target,buffer_object->m_buffer);
+			m_state_fns->glBindBuffer(target,buffer_object->m_buffer);
 		else
-			m_state_fns.glBindBuffer(target,0);
+			m_state_fns->glBindBuffer(target,0);
 
 		if (!m_buffer_objects.insert(target,buffer_object))
 			LOG_WARNING(("Failed to add to buffer object cache"));
@@ -315,9 +315,9 @@ OOBase::SharedPtr<OOGL::BufferObject> OOGL::State::bind_buffer_target(const OOBa
 			i->second = buffer_object;
 
 			if (buffer_object)
-				m_state_fns.glBindBuffer(target,buffer_object->m_buffer);
+				m_state_fns->glBindBuffer(target,buffer_object->m_buffer);
 			else
-				m_state_fns.glBindBuffer(target,0);
+				m_state_fns->glBindBuffer(target,0);
 		}
 	}
 
@@ -334,7 +334,7 @@ void OOGL::State::bind_buffer(GLuint buffer, GLenum target)
 
 	if (bind)
 	{
-		m_state_fns.glBindBuffer(target,buffer);
+		m_state_fns->glBindBuffer(target,buffer);
 
 		if (i && i->second)
 			m_buffer_objects.erase(i);
@@ -363,14 +363,14 @@ OOBase::SharedPtr<OOGL::VertexArrayObject> OOGL::State::bind(const OOBase::Share
 
 		if (vao)
 		{
-			m_state_fns.glBindVertexArray(vao->m_array);
+			m_state_fns->glBindVertexArray(vao->m_array);
 
 			// VAO bind sets the GL_ELEMENT_ARRAY_BUFFER binding
 			update_bind(vao->m_element_array,GL_ELEMENT_ARRAY_BUFFER);
 		}
 		else
 		{
-			m_state_fns.glBindVertexArray(0);
+			m_state_fns->glBindVertexArray(0);
 
 			// VAO bind sets the GL_ELEMENT_ARRAY_BUFFER binding
 			m_buffer_objects.remove(GL_ELEMENT_ARRAY_BUFFER);
@@ -388,7 +388,7 @@ OOBase::SharedPtr<OOGL::VertexArrayObject> OOGL::State::unbind_vao()
 	{
 		m_current_vao.reset();
 
-		m_state_fns.glBindVertexArray(0);
+		m_state_fns->glBindVertexArray(0);
 
 		// VAO bind sets the GL_ELEMENT_ARRAY_BUFFER binding
 		m_buffer_objects.remove(GL_ELEMENT_ARRAY_BUFFER);
@@ -406,7 +406,7 @@ OOBase::SharedPtr<OOGL::Program> OOGL::State::use(const OOBase::SharedPtr<Progra
 		if (program)
 			program->internal_use();
 		else
-			m_state_fns.glUseProgram(0);
+			m_state_fns->glUseProgram(0);
 
 		m_current_program = program;
 	}

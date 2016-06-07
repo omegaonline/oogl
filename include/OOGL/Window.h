@@ -94,7 +94,6 @@ namespace OOGL
 
 		OOBase::SharedPtr<Framebuffer> m_default_fb;
 		OOBase::SharedPtr<State>       m_state;
-		OOBase::SharedPtr<StateFns>    m_state_fns;
 
 		OOBase::Delegate1<void,const Window&,OOBase::ThreadLocalAllocator> m_on_close;
 		OOBase::Delegate2<void,const Window&,State&,OOBase::ThreadLocalAllocator> m_on_draw;

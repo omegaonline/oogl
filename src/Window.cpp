@@ -57,12 +57,12 @@ OOGL::Window::Window(int width, int height, const char* title, unsigned int styl
 	{
 		glfwMakeContextCurrent(m_glfw_window);
 
-		m_state_fns = OOBase::allocate_shared<StateFns,OOBase::ThreadLocalAllocator>();
-		if (!m_state_fns)
+		OOBase::SharedPtr<StateFns> state_fns = OOBase::allocate_shared<StateFns,OOBase::ThreadLocalAllocator>();
+		if (!state_fns)
 			LOG_ERROR(("Failed to allocate GL state functions object"));
 		else
 		{
-			m_state = OOBase::allocate_shared<State,OOBase::ThreadLocalAllocator>(OOBase::Ref<StateFns>(*m_state_fns.get()));
+			m_state = OOBase::allocate_shared<State,OOBase::ThreadLocalAllocator>(state_fns);
 			if (!m_state)
 				LOG_ERROR(("Failed to allocate GL state object"));
 			else

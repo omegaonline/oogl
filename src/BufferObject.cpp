@@ -114,8 +114,8 @@ OOBase::SharedPtr<char> OOGL::BufferObject::auto_map_i(GLenum access, GLintptr o
 	void* m = StateFns::get_current()->glMapBufferRange(self,offset,length,m_usage,m_size,access);
 	if (m)
 	{
-		BufferMapping* bm = NULL;
-		if (OOBase::ThreadLocalAllocator::allocate_new(bm,self,m))
+		BufferMapping* bm = OOBase::ThreadLocalAllocator::allocate_new<BufferMapping>(self,m);
+		if (bm)
 		{
 			ret = OOBase::make_shared(reinterpret_cast<char*>(m),bm);
 			if (!ret)

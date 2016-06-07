@@ -267,7 +267,7 @@ OOBase::SharedPtr<OOGL::StateFns> OOGL::StateFns::get_current()
 		return OOBase::SharedPtr<StateFns>();
 	}
 
-	return window->m_state_fns;
+	return window->m_state->m_state_fns;
 }
 
 void OOGL::StateFns::glGenFramebuffers(GLsizei n, GLuint *framebuffers)

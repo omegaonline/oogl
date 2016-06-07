@@ -77,7 +77,7 @@ namespace OOGL
 
 
 	private:
-		StateFns&                            m_state_fns;
+		OOBase::SharedPtr<StateFns>          m_state_fns;
 		OOBase::SharedPtr<Framebuffer>       m_draw_fb;
 		OOBase::SharedPtr<Framebuffer>       m_read_fb;
 		GLuint                               m_active_texture_unit;
@@ -100,7 +100,7 @@ namespace OOGL
 
 		OOBase::HashTable<GLenum,bool,OOBase::ThreadLocalAllocator> m_enables;
 
-		State(StateFns& fns);
+		State(const OOBase::SharedPtr<StateFns>& fns);
 		~State();
 		void reset();
 
