@@ -149,14 +149,11 @@ namespace OOGL
 			// We do this long-hand so T can friend us
 			void* t = OOBase::ThreadLocalAllocator::allocate(sizeof(T),OOBase::alignment_of<T>::value);
 			if (!t)
-				OOBase_CallCriticalFailure(ERROR_OUTOFMEMORY);
+				OOBase_CallCriticalFailure(OOBase::system_error());
 
 			// Add destructor before calling constructor
 			if (!State::get_current()->set_singleton(reinterpret_cast<void*>(&ContextSingleton<T>::init),t,&destroy))
-			{
-				OOBase::ThreadLocalAllocator::free(t);
-				OOBase_CallCriticalFailure(ERROR_OUTOFMEMORY);
-			}
+				OOBase_CallCriticalFailure(OOBase::system_error());
 
 #if defined(OOBASE_HAVE_EXCEPTIONS)
 			try

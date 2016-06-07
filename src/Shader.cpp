@@ -84,7 +84,7 @@ OOBase::SharedString<OOBase::ThreadLocalAllocator> OOGL::Shader::info_log() cons
 		{
 			fns->glGetShaderInfoLog(m_id,len,NULL,buf);
 			if (!ret.assign(buf,len))
-				LOG_ERROR(("Failed to assign string: %s",OOBase::system_error_text(ERROR_OUTOFMEMORY)));
+				LOG_ERROR(("Failed to assign string: %s",OOBase::system_error_text()));
 
 			allocator.free(buf);
 		}
@@ -138,7 +138,7 @@ OOBase::SharedString<OOBase::ThreadLocalAllocator> OOGL::Program::info_log() con
 		{
 			fns->glGetProgramInfoLog(m_id,len,NULL,buf);
 			if (!ret.assign(buf,len))
-				LOG_ERROR(("Failed to assign string: %s",OOBase::system_error_text(ERROR_OUTOFMEMORY)));
+				LOG_ERROR(("Failed to assign string: %s",OOBase::system_error_text()));
 
 			allocator.free(buf);
 		}
