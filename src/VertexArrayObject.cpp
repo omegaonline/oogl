@@ -172,19 +172,19 @@ void OOGL::VertexArrayObject::draw_elements(GLenum mode, GLsizei count, GLenum t
 	}
 }
 
-void OOGL::VertexArrayObject::draw_elements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, GLsizeiptr offset)
+void OOGL::VertexArrayObject::draw_elements(GLenum mode, GLuint min_val, GLuint max_val, GLsizei count, GLenum type, GLsizeiptr offset)
 {
 	State::get_current()->bind(shared_from_this());
-	StateFns::get_current()->glDrawRangeElements(mode,start,end,count,type,offset);
+	StateFns::get_current()->glDrawRangeElements(mode,min_val,max_val,count,type,offset);
 }
 
-void OOGL::VertexArrayObject::draw_elements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, GLsizeiptr offset, GLint basevertex)
+void OOGL::VertexArrayObject::draw_elements(GLenum mode, GLuint min_val, GLuint max_val, GLsizei count, GLenum type, GLsizeiptr offset, GLint basevertex)
 {
 	State::get_current()->bind(shared_from_this());
 	if (!basevertex)
-		StateFns::get_current()->glDrawRangeElements(mode,start,end,count,type,offset);
+		StateFns::get_current()->glDrawRangeElements(mode,min_val,max_val,count,type,offset);
 	else
-		StateFns::get_current()->glDrawRangeElementsBaseVertex(mode,start,end,count,type,offset,basevertex);
+		StateFns::get_current()->glDrawRangeElementsBaseVertex(mode,min_val,max_val,count,type,offset,basevertex);
 }
 
 void OOGL::VertexArrayObject::multi_draw_elements(GLenum mode, const GLsizei* counts, GLenum type, const GLsizeiptr* offsets, GLsizei drawcount)

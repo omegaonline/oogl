@@ -48,8 +48,8 @@ namespace OOGL
 
 		void draw_elements(GLenum mode, GLsizei count, GLenum type, GLsizeiptr offset = 0);
 		void draw_elements(GLenum mode, GLsizei count, GLenum type, GLsizeiptr offset, GLint basevertex);
-		void draw_elements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, GLsizeiptr offset = 0);
-		void draw_elements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, GLsizeiptr offset, GLint basevertex);
+		void draw_elements(GLenum mode, GLuint min_val, GLuint max_val, GLsizei count, GLenum type, GLsizeiptr offset = 0);
+		void draw_elements(GLenum mode, GLuint min_val, GLuint max_val, GLsizei count, GLenum type, GLsizeiptr offset, GLint basevertex);
 		void multi_draw_elements(GLenum mode, const GLsizei* counts, GLenum type, const GLsizeiptr* offsets, GLsizei drawcount);
 		void multi_draw_elements(GLenum mode, const GLsizei* counts, GLenum type, const GLsizeiptr* offsets, GLsizei drawcount, const GLint* basevertices);
 
