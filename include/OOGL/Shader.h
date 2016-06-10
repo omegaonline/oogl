@@ -25,7 +25,7 @@
 #include "OOGL.h"
 
 #include <OOBase/String.h>
-#include <OOBase/Table.h>
+#include <OOBase/HashTable.h>
 
 namespace OOGL
 {
@@ -128,7 +128,7 @@ namespace OOGL
 
 	private:
 		GLuint m_id;
-		typedef OOBase::Table<OOBase::SharedString<OOBase::ThreadLocalAllocator>,GLint,OOBase::Less<OOBase::SharedString<OOBase::ThreadLocalAllocator> >,OOBase::ThreadLocalAllocator> map_t;
+		typedef OOBase::HashTable<size_t,GLint,OOBase::ThreadLocalAllocator> map_t;
 		mutable map_t m_mapUniforms;
 		mutable map_t m_mapAttributes;
 

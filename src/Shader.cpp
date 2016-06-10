@@ -154,33 +154,29 @@ void OOGL::Program::internal_use() const
 
 GLint OOGL::Program::uniform_location(const char* name) const
 {
-	map_t::iterator i = m_mapUniforms.find(name);
+	size_t hash = OOBase::Hash<const char*>::hash(name);
+	map_t::iterator i = m_mapUniforms.find(hash);
 	if (i)
 		return i->second;
 
 	GLint l = StateFns::get_current()->glGetUniformLocation(m_id,name);
 	if (l != -1)
-	{
-		OOBase::SharedString<OOBase::ThreadLocalAllocator> s;
-		if (s.assign(name))
-			m_mapUniforms.insert(s,l);
-	}
+		m_mapUniforms.insert(hash,l);
+
 	return l;
 }
 
 GLint OOGL::Program::attribute_location(const char* name) const
 {
-	map_t::iterator i = m_mapAttributes.find(name);
+	size_t hash = OOBase::Hash<const char*>::hash(name);
+	map_t::iterator i = m_mapAttributes.find(hash);
 	if (i)
 		return i->second;
 
 	GLint l = StateFns::get_current()->glGetAttribLocation(m_id,name);
 	if (l != -1)
-	{
-		OOBase::SharedString<OOBase::ThreadLocalAllocator> s;
-		if (s.assign(name))
-			m_mapAttributes.insert(s,l);
-	}
+		m_mapAttributes.insert(hash,l);
+
 	return l;
 }
 
