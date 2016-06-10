@@ -138,14 +138,14 @@ void OOGL::Window::iconify(bool minimize)
 void OOGL::Window::cb_on_move(GLFWwindow* window, int left, int top)
 {
 	Window* pThis = static_cast<Window*>(glfwGetWindowUserPointer(window));
-	if (pThis && pThis->m_on_moved)
+	if (pThis && pThis->m_on_moved && pThis->visible())
 		pThis->m_on_moved.invoke(*pThis,glm::ivec2(left,top));
 }
 
 void OOGL::Window::cb_on_size(GLFWwindow* window, int width, int height)
 {
 	Window* pThis = static_cast<Window*>(glfwGetWindowUserPointer(window));
-	if (pThis && !pThis->iconified())
+	if (pThis && !pThis->iconified() && pThis->visible())
 	{
 		glfwMakeContextCurrent(window);
 
@@ -189,14 +189,14 @@ void OOGL::Window::cb_on_refresh(GLFWwindow* window)
 void OOGL::Window::cb_on_character(GLFWwindow* window, unsigned int codepoint, int mods)
 {
 	Window* pThis = static_cast<Window*>(glfwGetWindowUserPointer(window));
-	if (pThis && pThis->m_on_character)
+	if (pThis && pThis->m_on_character && pThis->visible())
 		pThis->m_on_character.invoke(*pThis,codepoint,mods);
 }
 
 void OOGL::Window::cb_on_key(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	Window* pThis = static_cast<Window*>(glfwGetWindowUserPointer(window));
-	if (pThis && pThis->m_on_keystroke)
+	if (pThis && pThis->m_on_keystroke && pThis->visible())
 	{
 		key_stroke_t keystroke = {key, scancode, action, mods};
 		pThis->m_on_keystroke.invoke(*pThis,keystroke);
@@ -231,7 +231,7 @@ void OOGL::Window::screen_to_fb(double& xpos, double& ypos)
 void OOGL::Window::cb_on_cursor_pos(GLFWwindow* window, double xpos, double ypos)
 {
 	Window* pThis = static_cast<Window*>(glfwGetWindowUserPointer(window));
-	if (pThis && pThis->m_on_mousemove)
+	if (pThis && pThis->m_on_mousemove && pThis->visible())
 	{
 		pThis->screen_to_fb(xpos,ypos);
 
@@ -242,7 +242,7 @@ void OOGL::Window::cb_on_cursor_pos(GLFWwindow* window, double xpos, double ypos
 void OOGL::Window::cb_on_mouse_btn(GLFWwindow* window, int button, int action, int mods)
 {
 	Window* pThis = static_cast<Window*>(glfwGetWindowUserPointer(window));
-	if (pThis && pThis->m_on_mousebutton)
+	if (pThis && pThis->m_on_mousebutton && pThis->visible())
 	{
 		mouse_click_t click = { static_cast<unsigned int>(button), action == GLFW_PRESS, mods};
 
