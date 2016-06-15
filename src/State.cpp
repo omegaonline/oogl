@@ -373,7 +373,7 @@ OOBase::SharedPtr<OOGL::VertexArrayObject> OOGL::State::bind(const OOBase::Share
 			m_state_fns->glBindVertexArray(0);
 
 			// VAO bind sets the GL_ELEMENT_ARRAY_BUFFER binding
-			m_buffer_objects.remove(GL_ELEMENT_ARRAY_BUFFER);
+			m_buffer_objects.remove(static_cast<GLenum>(GL_ELEMENT_ARRAY_BUFFER));
 		}
 	}
 
@@ -391,7 +391,7 @@ OOBase::SharedPtr<OOGL::VertexArrayObject> OOGL::State::unbind_vao()
 		m_state_fns->glBindVertexArray(0);
 
 		// VAO bind sets the GL_ELEMENT_ARRAY_BUFFER binding
-		m_buffer_objects.remove(GL_ELEMENT_ARRAY_BUFFER);
+		m_buffer_objects.remove(static_cast<GLenum>(GL_ELEMENT_ARRAY_BUFFER));
 	}
 
 	return prev;
