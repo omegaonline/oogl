@@ -82,6 +82,7 @@ OOGL::Window::Window(int width, int height, const char* title, unsigned int styl
 				glfwSetScrollCallback(m_glfw_window,&cb_on_mouse_wheel);
 				glfwSetCharModsCallback(m_glfw_window,&cb_on_character);
 				glfwSetKeyCallback(m_glfw_window,&cb_on_key);
+				glfwSetScrollCallback(m_glfw_window,&cb_on_scroll);
 			}
 		}
 	}
@@ -135,14 +136,14 @@ void OOGL::Window::iconify(bool minimize)
 	}
 }
 
-glm::dvec2 OOGL::Window::cursor_pos() const
+/*glm::dvec2 OOGL::Window::cursor_pos() const
 {
 	glm::dvec2 pos(-1.0,-1.0);
 	if (m_glfw_window)
 		glfwGetCursorPos(m_glfw_window,&pos.x,&pos.y);
 	
 	return pos;
-}
+}*/
 
 void OOGL::Window::cb_on_move(GLFWwindow* window, int left, int top)
 {
@@ -264,6 +265,17 @@ void OOGL::Window::cb_on_mouse_btn(GLFWwindow* window, int button, int action, i
 		mouse_click_t click = { static_cast<unsigned int>(button), action == GLFW_PRESS, mods};
 
 		pThis->m_on_mousebutton.invoke(*pThis,click);
+	}
+}
+
+void OOGL::Window::cb_on_scroll(GLFWwindow* window, double xpos, double ypos)
+{
+	Window* pThis = static_cast<Window*>(glfwGetWindowUserPointer(window));
+	if (pThis && pThis->m_on_scroll && pThis->visible())
+	{
+		pThis->screen_to_fb(xpos,ypos);
+
+		pThis->m_on_scroll.invoke(*pThis,glm::dvec2(xpos,ypos));
 	}
 }
 
@@ -437,5 +449,12 @@ OOBase::Delegate2<void,const OOGL::Window&,const OOGL::Window::mouse_click_t&,OO
 {
 	OOBase::Delegate2<void,const Window&,const mouse_click_t&,OOBase::ThreadLocalAllocator> prev = m_on_mousebutton;
 	m_on_mousebutton = delegate;
+	return prev;
+}
+
+OOBase::Delegate2<void,const OOGL::Window&,const glm::dvec2&,OOBase::ThreadLocalAllocator> OOGL::Window:: on_scroll(const OOBase::Delegate2<void,const Window&,const glm::dvec2&,OOBase::ThreadLocalAllocator>& delegate)
+{
+	OOBase::Delegate2<void,const Window&,const glm::dvec2&,OOBase::ThreadLocalAllocator> prev = m_on_scroll;
+	m_on_scroll = delegate;
 	return prev;
 }

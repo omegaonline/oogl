@@ -60,7 +60,7 @@ namespace OOGL
 		glm::uvec2 size() const;
 		glm::vec2 dots_per_mm() const;
 
-		glm::dvec2 cursor_pos() const;
+		//glm::dvec2 cursor_pos() const;
 
 		const OOBase::SharedPtr<Framebuffer>& default_frame_buffer() const;
 
@@ -76,6 +76,7 @@ namespace OOGL
 		OOBase::Delegate2<void,const Window&,bool,OOBase::ThreadLocalAllocator> on_cursorenter(const OOBase::Delegate2<void,const Window&,bool,OOBase::ThreadLocalAllocator>& delegate);
 		OOBase::Delegate2<void,const Window&,bool,OOBase::ThreadLocalAllocator> on_focus(const OOBase::Delegate2<void,const Window&,bool,OOBase::ThreadLocalAllocator>& delegate);
 		OOBase::Delegate2<void,const Window&,bool,OOBase::ThreadLocalAllocator> on_iconify(const OOBase::Delegate2<void,const Window&,bool,OOBase::ThreadLocalAllocator>& delegate);
+		OOBase::Delegate2<void,const Window&,const glm::dvec2&,OOBase::ThreadLocalAllocator> on_scroll(const OOBase::Delegate2<void,const Window&,const glm::dvec2&,OOBase::ThreadLocalAllocator>& delegate);
 
 		struct key_stroke_t
 		{
@@ -111,6 +112,7 @@ namespace OOGL
 		OOBase::Delegate2<void,const Window&,const mouse_click_t&,OOBase::ThreadLocalAllocator> m_on_mousebutton;
 		OOBase::Delegate2<void,const Window&,bool,OOBase::ThreadLocalAllocator> m_on_focus;
 		OOBase::Delegate2<void,const Window&,bool,OOBase::ThreadLocalAllocator> m_on_iconify;
+		OOBase::Delegate2<void,const Window&,const glm::dvec2&,OOBase::ThreadLocalAllocator> m_on_scroll;
 
 		GLFWmonitor* monitor() const;
 
@@ -126,6 +128,7 @@ namespace OOGL
 		static void cb_on_cursor_enter(GLFWwindow* window, int entered);
 		static void cb_on_cursor_pos(GLFWwindow* window, double xpos, double ypos);
 		static void cb_on_mouse_btn(GLFWwindow* window, int button, int action, int mods);
+		static void cb_on_scroll(GLFWwindow* window, double xpos, double ypos);
 
 		void screen_to_fb(double& xpos, double& ypos);
 	};
