@@ -46,7 +46,7 @@ namespace OOGL
 			eWSdebug_context = 8
 		};
 
-		Window(int width, int height, const char* title, unsigned int style = eWSdecorated, GLFWmonitor* monitor = NULL);
+		Window(int width, int height, const char* title, unsigned int style = eWSdecorated, GLFWmonitor* monitor = NULL, int msaa = 0);
 		~Window();
 
 		bool valid() const;

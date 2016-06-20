@@ -26,7 +26,7 @@
 
 #include <OOBase/Logger.h>
 
-OOGL::Window::Window(int width, int height, const char* title, unsigned int style, GLFWmonitor* monitor) :
+OOGL::Window::Window(int width, int height, const char* title, unsigned int style, GLFWmonitor* monitor, int msaa) :
 		m_glfw_window(NULL)
 {
 	if (!width || !height)
@@ -48,6 +48,8 @@ OOGL::Window::Window(int width, int height, const char* title, unsigned int styl
 		glfwWindowHint(GLFW_DECORATED,(style & eWSdecorated) ? GL_TRUE : GL_FALSE);
 	}
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT,(style & eWSdebug_context) ? GL_TRUE : GL_FALSE);
+	glfwWindowHint(GLFW_DOUBLEBUFFER,GL_TRUE);
+	glfwWindowHint(GLFW_SAMPLES,msaa);
 
 	// Now try to create the window
 	m_glfw_window = glfwCreateWindow(width,height,title,monitor,NULL);
