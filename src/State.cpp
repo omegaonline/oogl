@@ -296,28 +296,32 @@ OOBase::SharedPtr<OOGL::BufferObject> OOGL::State::bind(const OOBase::SharedPtr<
 OOBase::SharedPtr<OOGL::BufferObject> OOGL::State::bind_buffer_target(const OOBase::SharedPtr<BufferObject>& buffer_object, GLenum target)
 {
 	OOBase::SharedPtr<BufferObject> prev;
-	OOBase::HashTable<GLenum,OOBase::SharedPtr<BufferObject>,OOBase::ThreadLocalAllocator>::iterator i = m_buffer_objects.find(target);
+
+	GLuint buffer = buffer_object ? buffer_object->m_buffer : 0;
+
+	OOBase::HashTable<GLenum,buf_pair,OOBase::ThreadLocalAllocator>::iterator i = m_buffer_objects.find(target);
 	if (!i)
 	{
-		if (buffer_object)
-			m_state_fns->glBindBuffer(target,buffer_object->m_buffer);
-		else
-			m_state_fns->glBindBuffer(target,0);
+		buf_pair bp;
+		bp.buf_ptr = buffer_object;
+		bp.buffer = buffer;
 
-		if (!m_buffer_objects.insert(target,buffer_object))
+		m_state_fns->glBindBuffer(target,buffer);
+
+		if (!m_buffer_objects.insert(target,bp))
 			LOG_WARNING(("Failed to add to buffer object cache"));
 	}
 	else 
 	{
-		prev = i->second;
-		if (i->second != buffer_object)
-		{
-			i->second = buffer_object;
+		prev = i->second.buf_ptr;
+		if (i->second.buf_ptr != buffer_object)
+			i->second.buf_ptr = buffer_object;
 
-			if (buffer_object)
-				m_state_fns->glBindBuffer(target,buffer_object->m_buffer);
-			else
-				m_state_fns->glBindBuffer(target,0);
+		if (i->second.buffer != buffer)
+		{
+			m_state_fns->glBindBuffer(target,buffer);
+
+			i->second.buffer = buffer;
 		}
 	}
 
@@ -326,31 +330,28 @@ OOBase::SharedPtr<OOGL::BufferObject> OOGL::State::bind_buffer_target(const OOBa
 
 void OOGL::State::bind_buffer(GLuint buffer, GLenum target)
 {
-	bool bind = true;
-
-	OOBase::HashTable<GLenum,OOBase::SharedPtr<BufferObject>,OOBase::ThreadLocalAllocator>::iterator i = m_buffer_objects.find(target);
-	if (i && i->second && i->second->m_buffer == buffer)
-		bind = false;
-
-	if (bind)
-	{
-		m_state_fns->glBindBuffer(target,buffer);
-
-		if (i && i->second)
-			m_buffer_objects.erase(i);
-	}
-}
-
-void OOGL::State::update_bind(const OOBase::SharedPtr<BufferObject>& buffer_object, GLenum target)
-{
-	OOBase::HashTable<GLenum,OOBase::SharedPtr<BufferObject>,OOBase::ThreadLocalAllocator>::iterator i = m_buffer_objects.find(target);
+	OOBase::HashTable<GLenum,buf_pair,OOBase::ThreadLocalAllocator>::iterator i = m_buffer_objects.find(target);
 	if (!i)
 	{
-		if (!m_buffer_objects.insert(target,buffer_object))
+		buf_pair bp;
+		bp.buffer = buffer;
+
+		m_state_fns->glBindBuffer(target,buffer);
+
+		if (!m_buffer_objects.insert(target,bp))
 			LOG_WARNING(("Failed to add to buffer object cache"));
 	}
-	else if (i->second != buffer_object)
-		i->second = buffer_object;
+	else
+	{
+		i->second.buf_ptr.reset();
+
+		if (i->second.buffer != buffer)
+		{
+			m_state_fns->glBindBuffer(target,buffer);
+
+			i->second.buffer = buffer;
+		}
+	}
 }
 
 OOBase::SharedPtr<OOGL::VertexArrayObject> OOGL::State::bind(const OOBase::SharedPtr<VertexArrayObject>& vao)
@@ -361,37 +362,42 @@ OOBase::SharedPtr<OOGL::VertexArrayObject> OOGL::State::bind(const OOBase::Share
 	{
 		m_current_vao = vao;
 
-		if (vao)
-		{
-			m_state_fns->glBindVertexArray(vao->m_array);
+		m_state_fns->glBindVertexArray(vao ? vao->m_array : 0);
 
-			// VAO bind sets the GL_ELEMENT_ARRAY_BUFFER binding
-			update_bind(vao->m_element_array,GL_ELEMENT_ARRAY_BUFFER);
+		buf_pair bp;
+		bp.buf_ptr = vao ? vao->m_element_array : OOBase::SharedPtr<BufferObject>();
+		bp.buffer = (bp.buf_ptr ? bp.buf_ptr->m_buffer : 0);
+
+		// Check to see if the GL_ELEMENT_ARRAY_BUFFER binding has actually changed as early Intel drivers didn't
+		static int s_dodgy_vao_bind = -1;
+		if (s_dodgy_vao_bind == -1)
+		{
+			GLint v = 0;
+			glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING,&v);
+			if (static_cast<GLuint>(v) != bp.buffer)
+				s_dodgy_vao_bind = 1;
+			else
+				s_dodgy_vao_bind = 0;
+		}
+
+		if (s_dodgy_vao_bind)
+		{
+			bind_buffer_target(bp.buf_ptr,GL_ELEMENT_ARRAY_BUFFER);
 		}
 		else
 		{
-			m_state_fns->glBindVertexArray(0);
-
 			// VAO bind sets the GL_ELEMENT_ARRAY_BUFFER binding
-			m_buffer_objects.remove(static_cast<GLenum>(GL_ELEMENT_ARRAY_BUFFER));
+			OOBase::HashTable<GLenum,buf_pair,OOBase::ThreadLocalAllocator>::iterator i = m_buffer_objects.find(static_cast<GLenum>(GL_ELEMENT_ARRAY_BUFFER));
+			if (!i)
+			{
+				if (!m_buffer_objects.insert(GL_ELEMENT_ARRAY_BUFFER,bp))
+					LOG_WARNING(("Failed to add to buffer object cache"));
+			}
+			else
+			{
+				i->second = bp;
+			}
 		}
-	}
-
-	return prev;
-}
-
-OOBase::SharedPtr<OOGL::VertexArrayObject> OOGL::State::unbind_vao()
-{
-	OOBase::SharedPtr<VertexArrayObject> prev = m_current_vao;
-
-	if (m_current_vao->m_array != 0)
-	{
-		m_current_vao.reset();
-
-		m_state_fns->glBindVertexArray(0);
-
-		// VAO bind sets the GL_ELEMENT_ARRAY_BUFFER binding
-		m_buffer_objects.remove(static_cast<GLenum>(GL_ELEMENT_ARRAY_BUFFER));
 	}
 
 	return prev;

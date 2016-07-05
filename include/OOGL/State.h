@@ -87,6 +87,9 @@ namespace OOGL
 		
 		struct tex_pair
 		{
+			tex_pair() : texture(0), tex_ptr()
+			{}
+
 			GLuint texture;
 			OOBase::SharedPtr<Texture> tex_ptr;
 		};
@@ -95,8 +98,16 @@ namespace OOGL
 		void bind_texture(GLuint texture, GLenum target);
 		void update_texture_binding(GLuint texture, GLenum target);
 
+		struct buf_pair
+		{
+			buf_pair() : buffer(0), buf_ptr()
+			{}
+
+			GLuint buffer;
+			OOBase::SharedPtr<BufferObject> buf_ptr;
+		};
 		void bind_buffer(GLuint buffer, GLenum target);
-		OOBase::HashTable<GLenum,OOBase::SharedPtr<BufferObject>,OOBase::ThreadLocalAllocator> m_buffer_objects;
+		OOBase::HashTable<GLenum,buf_pair,OOBase::ThreadLocalAllocator> m_buffer_objects;
 
 		OOBase::HashTable<GLenum,bool,OOBase::ThreadLocalAllocator> m_enables;
 
@@ -105,9 +116,7 @@ namespace OOGL
 		void reset();
 
 		GLuint activate_texture_unit(GLuint unit);
-		OOBase::SharedPtr<OOGL::VertexArrayObject> unbind_vao();
 
-		void update_bind(const OOBase::SharedPtr<BufferObject>& buffer_object, GLenum target);
 		OOBase::SharedPtr<BufferObject> bind_buffer_target(const OOBase::SharedPtr<BufferObject>& buffer_object, GLenum target);
 		OOBase::SharedPtr<Texture> bind_texture_active_unit(const OOBase::SharedPtr<Texture>& texture);
 
