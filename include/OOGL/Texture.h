@@ -27,6 +27,7 @@
 namespace OOGL
 {
 	class State;
+	class StateFns;
 
 	class Texture : public OOBase::NonCopyable, public OOBase::EnableSharedFromThis<Texture>
 	{
@@ -73,8 +74,9 @@ namespace OOGL
 		void clear(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const void* pixels);
 
 	protected:
-		GLuint m_tex;
-		GLenum m_target;
+		StateFns* const m_state_fns;
+		GLuint          m_tex;
+		GLenum          m_target;
 
 		Texture(GLenum target);
 

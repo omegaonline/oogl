@@ -45,6 +45,7 @@ namespace
 }
 
 OOGL::Texture::Texture(GLenum target) :
+		m_state_fns(StateFns::get_current().get()),
 		m_tex(0),
 		m_target(target)
 {
@@ -52,12 +53,14 @@ OOGL::Texture::Texture(GLenum target) :
 }
 
 OOGL::Texture::Texture(GLuint tex, GLenum target) :
+		m_state_fns(StateFns::get_current().get()),
 		m_tex(tex),
 		m_target(target)
 {
 }
 
 OOGL::Texture::Texture(GLenum target, GLsizei levels, GLenum internalFormat, GLsizei width) :
+		m_state_fns(StateFns::get_current().get()),
 		m_tex(0),
 		m_target(target)
 {
@@ -66,14 +69,14 @@ OOGL::Texture::Texture(GLenum target, GLsizei levels, GLenum internalFormat, GLs
 	
 	init();
 
-	OOBase::SharedPtr<StateFns> fns = StateFns::get_current();
-	if (!fns->check_glTextureStorage())
+	if (!m_state_fns->check_glTextureStorage())
 		init_mutable(levels,internalFormat,width,0,0,NULL);
 	else
-		fns->glTextureStorage1D(m_tex,m_target,levels,internalFormat,width);
+		m_state_fns->glTextureStorage1D(m_tex,m_target,levels,internalFormat,width);
 }
 
 OOGL::Texture::Texture(GLenum target, GLsizei levels, GLenum internalFormat, GLsizei width, GLsizei height) :
+		m_state_fns(StateFns::get_current().get()),
 		m_tex(0),
 		m_target(target)
 {
@@ -82,14 +85,14 @@ OOGL::Texture::Texture(GLenum target, GLsizei levels, GLenum internalFormat, GLs
 
 	init();
 
-	OOBase::SharedPtr<StateFns> fns = StateFns::get_current();
-	if (!fns->check_glTextureStorage())
+	if (!m_state_fns->check_glTextureStorage())
 		init_mutable(levels,internalFormat,width,height,0,0,NULL);
 	else
-		fns->glTextureStorage2D(m_tex,m_target,levels,internalFormat,width,height);
+		m_state_fns->glTextureStorage2D(m_tex,m_target,levels,internalFormat,width,height);
 }
 
 OOGL::Texture::Texture(GLenum target, GLsizei levels, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth) :
+		m_state_fns(StateFns::get_current().get()),
 		m_tex(0),
 		m_target(target)
 {
@@ -98,14 +101,14 @@ OOGL::Texture::Texture(GLenum target, GLsizei levels, GLenum internalFormat, GLs
 
 	init();
 
-	OOBase::SharedPtr<StateFns> fns = StateFns::get_current();
-	if (!fns->check_glTextureStorage())
+	if (!m_state_fns->check_glTextureStorage())
 		init_mutable(levels,internalFormat,width,height,depth,0,0,NULL);
 	else
-		fns->glTextureStorage3D(m_tex,m_target,levels,internalFormat,width,height,depth);
+		m_state_fns->glTextureStorage3D(m_tex,m_target,levels,internalFormat,width,height,depth);
 }
 
 OOGL::Texture::Texture(GLenum target, GLsizei levels, GLenum internalFormat, GLsizei width, GLenum format, GLenum type, const void* pixels) :
+		m_state_fns(StateFns::get_current().get()),
 		m_tex(0),
 		m_target(target)
 {
@@ -114,16 +117,15 @@ OOGL::Texture::Texture(GLenum target, GLsizei levels, GLenum internalFormat, GLs
 
 	init();
 
-	OOBase::SharedPtr<StateFns> fns = StateFns::get_current();
-	if (!fns->check_glTextureStorage())
+	if (!m_state_fns->check_glTextureStorage())
 		init_mutable(levels,internalFormat,width,format,type,pixels);
 	else
 	{
-		fns->glTextureStorage1D(m_tex,m_target,levels,internalFormat,width);
-		fns->glTextureSubImage1D(m_tex,m_target,0,0,width,format,type,pixels);
+		m_state_fns->glTextureStorage1D(m_tex,m_target,levels,internalFormat,width);
+		m_state_fns->glTextureSubImage1D(m_tex,m_target,0,0,width,format,type,pixels);
 
 		if (levels > 1)
-			fns->glGenerateTextureMipmap(m_tex,m_target);
+			m_state_fns->glGenerateTextureMipmap(m_tex,m_target);
 		else
 		{
 			glTexParameteri(target,GL_TEXTURE_BASE_LEVEL,0);
@@ -133,6 +135,7 @@ OOGL::Texture::Texture(GLenum target, GLsizei levels, GLenum internalFormat, GLs
 }
 
 OOGL::Texture::Texture(GLenum target, GLsizei levels, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void* pixels) :
+		m_state_fns(StateFns::get_current().get()),
 		m_tex(0),
 		m_target(target)
 {
@@ -141,16 +144,15 @@ OOGL::Texture::Texture(GLenum target, GLsizei levels, GLenum internalFormat, GLs
 
 	init();
 
-	OOBase::SharedPtr<StateFns> fns = StateFns::get_current();
-	if (!fns->check_glTextureStorage())
+	if (!m_state_fns->check_glTextureStorage())
 		init_mutable(levels,internalFormat,width,height,format,type,pixels);
 	else
 	{
-		fns->glTextureStorage2D(m_tex,m_target,levels,internalFormat,width,height);
-		fns->glTextureSubImage2D(m_tex,m_target,0,0,0,width,height,format,type,pixels);
+		m_state_fns->glTextureStorage2D(m_tex,m_target,levels,internalFormat,width,height);
+		m_state_fns->glTextureSubImage2D(m_tex,m_target,0,0,0,width,height,format,type,pixels);
 
 		if (levels > 1)
-			fns->glGenerateTextureMipmap(m_tex,m_target);
+			m_state_fns->glGenerateTextureMipmap(m_tex,m_target);
 		else
 		{
 			glTexParameteri(target,GL_TEXTURE_BASE_LEVEL,0);
@@ -160,6 +162,7 @@ OOGL::Texture::Texture(GLenum target, GLsizei levels, GLenum internalFormat, GLs
 }
 
 OOGL::Texture::Texture(GLenum target, GLsizei levels, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const void* pixels) :
+		m_state_fns(StateFns::get_current().get()),
 		m_tex(0),
 		m_target(target)
 {
@@ -168,16 +171,15 @@ OOGL::Texture::Texture(GLenum target, GLsizei levels, GLenum internalFormat, GLs
 
 	init();
 
-	OOBase::SharedPtr<StateFns> fns = StateFns::get_current();
-	if (!fns->check_glTextureStorage())
+	if (!m_state_fns->check_glTextureStorage())
 		init_mutable(levels,internalFormat,width,height,depth,format,type,pixels);
 	else
 	{
-		fns->glTextureStorage3D(m_tex,m_target,levels,internalFormat,width,height,depth);
-		fns->glTextureSubImage3D(m_tex,m_target,0,0,0,0,width,height,depth,format,type,pixels);
+		m_state_fns->glTextureStorage3D(m_tex,m_target,levels,internalFormat,width,height,depth);
+		m_state_fns->glTextureSubImage3D(m_tex,m_target,0,0,0,0,width,height,depth,format,type,pixels);
 
 		if (levels > 1)
-			fns->glGenerateTextureMipmap(m_tex,m_target);
+			m_state_fns->glGenerateTextureMipmap(m_tex,m_target);
 		else
 		{
 			glTexParameteri(target,GL_TEXTURE_BASE_LEVEL,0);
@@ -213,8 +215,6 @@ void OOGL::Texture::init()
 
 void OOGL::Texture::init_mutable(GLsizei levels, GLenum internalFormat, GLsizei width, GLenum format, GLenum type, const void* pixels)
 {
-	OOBase::SharedPtr<StateFns> fns = StateFns::get_current();
-	
 	if (!pixels || levels == 1)
 	{
 		glTexParameteri(m_target,GL_TEXTURE_BASE_LEVEL,0);
@@ -228,28 +228,23 @@ void OOGL::Texture::init_mutable(GLsizei levels, GLenum internalFormat, GLsizei 
 				width = 1;
 		}
 	}
+	else if (m_state_fns->check_glGenerateMipmap())
+	{
+		glTexImage1D(m_target,0,internalFormat,width,0,format,type,pixels);
+		m_state_fns->glGenerateTextureMipmap(m_tex,m_target);
+	}
 	else
 	{
-		if (fns->check_glGenerateMipmap())
-		{
-			glTexImage1D(m_target,0,internalFormat,width,0,format,type,pixels);
-			fns->glGenerateTextureMipmap(m_tex,m_target);
-		}
-		else
-		{
-			glTexParameteri(m_target,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-			glTexParameteri(m_target,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameteri(m_target,GL_GENERATE_MIPMAP,GL_TRUE);
-			glTexImage1D(m_target,0,internalFormat,width,0,format,type,pixels);
-			glTexParameteri(m_target,GL_GENERATE_MIPMAP,GL_FALSE);
-		}
+		glTexParameteri(m_target,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+		glTexParameteri(m_target,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(m_target,GL_GENERATE_MIPMAP,GL_TRUE);
+		glTexImage1D(m_target,0,internalFormat,width,0,format,type,pixels);
+		glTexParameteri(m_target,GL_GENERATE_MIPMAP,GL_FALSE);
 	}
 }
 
 void OOGL::Texture::init_mutable(GLsizei levels, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void* pixels)
 {
-	OOBase::SharedPtr<StateFns> fns = StateFns::get_current();
-
 	if (!pixels || levels == 1)
 	{
 		glTexParameteri(m_target,GL_TEXTURE_BASE_LEVEL,0);
@@ -281,31 +276,26 @@ void OOGL::Texture::init_mutable(GLsizei levels, GLenum internalFormat, GLsizei 
 			}
 		}
 	}
+	else if (m_state_fns->check_glGenerateMipmap())
+	{
+		glTexImage2D(m_target,0,internalFormat,width,height,0,format,type,pixels);
+		m_state_fns->glGenerateTextureMipmap(m_tex,m_target);
+	}
 	else
 	{
-		if (fns->check_glGenerateMipmap())
-		{
-			glTexImage2D(m_target,0,internalFormat,width,height,0,format,type,pixels);
-			fns->glGenerateTextureMipmap(m_tex,m_target);
-		}
-		else
-		{
-			if (m_target == GL_TEXTURE_2D)
-				glEnable(GL_TEXTURE_2D);
+		if (m_target == GL_TEXTURE_2D)
+			glEnable(GL_TEXTURE_2D);
 
-			glTexParameteri(m_target,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-			glTexParameteri(m_target,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameteri(m_target,GL_GENERATE_MIPMAP,GL_TRUE);
-			glTexImage2D(m_target,0,internalFormat,width,height,0,format,type,pixels);
-			glTexParameteri(m_target,GL_GENERATE_MIPMAP,GL_FALSE);
-		}
+		glTexParameteri(m_target,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+		glTexParameteri(m_target,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(m_target,GL_GENERATE_MIPMAP,GL_TRUE);
+		glTexImage2D(m_target,0,internalFormat,width,height,0,format,type,pixels);
+		glTexParameteri(m_target,GL_GENERATE_MIPMAP,GL_FALSE);
 	}
 }
 
 void OOGL::Texture::init_mutable(GLsizei levels, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const void* pixels)
 {
-	OOBase::SharedPtr<StateFns> fns = StateFns::get_current();
-
 	if (!pixels || levels == 1)
 	{
 		glTexParameteri(m_target,GL_TEXTURE_BASE_LEVEL,0);
@@ -331,33 +321,29 @@ void OOGL::Texture::init_mutable(GLsizei levels, GLenum internalFormat, GLsizei 
 			}
 		}
 	}
+	else if (m_state_fns->check_glGenerateMipmap())
+	{
+		m_state_fns->glTexImage3D(m_target,0,internalFormat,width,height,depth,0,format,type,pixels);
+		m_state_fns->glGenerateTextureMipmap(m_tex,m_target);
+	}
 	else
 	{
-		OOBase::SharedPtr<StateFns> fns = StateFns::get_current();
-		if (fns->check_glGenerateMipmap())
-		{
-			fns->glTexImage3D(m_target,0,internalFormat,width,height,depth,0,format,type,pixels);
-			fns->glGenerateTextureMipmap(m_tex,m_target);
-		}
-		else
-		{
-			glTexParameteri(m_target,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-			glTexParameteri(m_target,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameteri(m_target,GL_GENERATE_MIPMAP,GL_TRUE);
-			fns->glTexImage3D(m_target,0,internalFormat,width,height,depth,0,format,type,pixels);
-			glTexParameteri(m_target,GL_GENERATE_MIPMAP,GL_FALSE);
-		}
+		glTexParameteri(m_target,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+		glTexParameteri(m_target,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(m_target,GL_GENERATE_MIPMAP,GL_TRUE);
+		m_state_fns->glTexImage3D(m_target,0,internalFormat,width,height,depth,0,format,type,pixels);
+		glTexParameteri(m_target,GL_GENERATE_MIPMAP,GL_FALSE);
 	}
 }
 
 void OOGL::Texture::sub_image(GLint level, GLint xoffset, GLsizei width, GLenum format, GLenum type, const void* pixels)
 {
-	StateFns::get_current()->glTextureSubImage1D(shared_from_this(),level,xoffset,width,format,type,pixels);
+	m_state_fns->glTextureSubImage1D(shared_from_this(),level,xoffset,width,format,type,pixels);
 }
 
 void OOGL::Texture::sub_image(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void* pixels)
 {
-	StateFns::get_current()->glTextureSubImage2D(shared_from_this(),level,xoffset,yoffset,width,height,format,type,pixels);
+	m_state_fns->glTextureSubImage2D(shared_from_this(),level,xoffset,yoffset,width,height,format,type,pixels);
 }
 
 void OOGL::Texture::cubemap_sub_image(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void* pixels)
@@ -371,7 +357,7 @@ void OOGL::Texture::cubemap_sub_image(GLenum target, GLint level, GLint xoffset,
 
 void OOGL::Texture::sub_image(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const void* pixels)
 {
-	StateFns::get_current()->glTextureSubImage3D(shared_from_this(),level,xoffset,yoffset,zoffset,width,height,depth,format,type,pixels);
+	m_state_fns->glTextureSubImage3D(shared_from_this(),level,xoffset,yoffset,zoffset,width,height,depth,format,type,pixels);
 }
 
 GLenum OOGL::Texture::target() const
@@ -381,22 +367,22 @@ GLenum OOGL::Texture::target() const
 
 void OOGL::Texture::parameter(GLenum name, GLfloat val)
 {
-	StateFns::get_current()->glTextureParameterf(shared_from_this(),name,val);
+	m_state_fns->glTextureParameterf(shared_from_this(),name,val);
 }
 
 void OOGL::Texture::parameter(GLenum name, const GLfloat* pval)
 {
-	StateFns::get_current()->glTextureParameterfv(shared_from_this(),name,pval);
+	m_state_fns->glTextureParameterfv(shared_from_this(),name,pval);
 }
 
 void OOGL::Texture::parameter(GLenum name, GLint val)
 {
-	StateFns::get_current()->glTextureParameteri(shared_from_this(),name,val);
+	m_state_fns->glTextureParameteri(shared_from_this(),name,val);
 }
 
 void OOGL::Texture::parameter(GLenum name, const GLint* pval)
 {
-	StateFns::get_current()->glTextureParameteriv(shared_from_this(),name,pval);
+	m_state_fns->glTextureParameteriv(shared_from_this(),name,pval);
 }
 
 OOGL::MutableTexture::MutableTexture(GLenum target, GLsizei levels, GLenum internalFormat, GLsizei width) : 

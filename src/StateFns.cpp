@@ -1652,10 +1652,10 @@ void* OOGL::StateFns::call_glMapBufferRange(const OOBase::SharedPtr<BufferObject
 
 void* OOGL::StateFns::call_glMapBuffer(const OOBase::SharedPtr<BufferObject>& buffer, GLintptr offset, GLsizeiptr length, GLenum orig_usage, GLsizeiptr orig_size, GLbitfield access)
 {
+	State::get_current()->bind(buffer);
+
 	if (access & GL_MAP_INVALIDATE_BUFFER_BIT)
 		glBufferData(buffer->m_buffer,buffer->m_target,orig_size,NULL,orig_usage);
-	
-	State::get_current()->bind(buffer);
 	
 	OOBase::uint8_t* ret = static_cast<OOBase::uint8_t*>((*((PFNGLMAPBUFFERPROC)m_fn_glMapBufferRange))(buffer->m_target,access));
 	if (ret)

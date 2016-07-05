@@ -7,6 +7,8 @@
 
 namespace OOGL
 {
+	class State;
+	class StateFns;
 	class BufferObject;
 
 	class VertexArrayObject : public OOBase::NonCopyable, public OOBase::EnableSharedFromThis<VertexArrayObject>
@@ -58,7 +60,9 @@ namespace OOGL
 		void draw_elements_instanced(GLenum mode, GLsizei count, GLenum type, GLsizeiptr offset, GLsizei instances, GLint basevertex, GLuint baseinstance);
 
 	private:
-		GLuint m_array;
+		State* const    m_state;
+		StateFns* const m_state_fns;
+		GLuint          m_array;
 
 		OOBase::Table<GLuint,OOBase::SharedPtr<BufferObject>,OOBase::Less<GLuint>,OOBase::ThreadLocalAllocator> m_attributes;
 		OOBase::SharedPtr<BufferObject> m_element_array;
