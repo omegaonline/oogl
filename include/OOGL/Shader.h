@@ -131,8 +131,6 @@ namespace OOGL
 		typedef OOBase::HashTable<size_t,GLint,OOBase::ThreadLocalAllocator> map_t;
 		mutable map_t m_mapUniforms;
 		mutable map_t m_mapAttributes;
-
-		void internal_use() const;
 	};
 }
 

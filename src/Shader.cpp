@@ -147,11 +147,6 @@ OOBase::SharedString<OOBase::ThreadLocalAllocator> OOGL::Program::info_log() con
 	return ret;
 }
 
-void OOGL::Program::internal_use() const
-{
-	StateFns::get_current()->glUseProgram(m_id);
-}
-
 GLint OOGL::Program::uniform_location(const char* name) const
 {
 	size_t hash = OOBase::Hash<const char*>::hash(name);

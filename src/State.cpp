@@ -403,10 +403,7 @@ OOBase::SharedPtr<OOGL::Program> OOGL::State::use(const OOBase::SharedPtr<Progra
 
 	if (m_current_program != program)
 	{
-		if (program)
-			program->internal_use();
-		else
-			m_state_fns->glUseProgram(0);
+		m_state_fns->glUseProgram(program ? program->m_id : 0);
 
 		m_current_program = program;
 	}
