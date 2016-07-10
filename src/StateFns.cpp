@@ -1836,7 +1836,11 @@ void OOGL::StateFns::glGenVertexArrays(GLsizei n, GLuint* arrays)
 	if (!m_fn_glGenVertexArrays)
 	{
 		if (isGLversion(3,0) || glfwExtensionSupported("GL_ARB_vertex_array_object") == GL_TRUE)
+		{
 			m_fn_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)glfwGetProcAddress("glGenVertexArrays");
+			if (m_fn_glGenVertexArrays && !isGLversion(3,1))
+				glEnableClientState(GL_VERTEX_ARRAY);
+		}
 	}
 
 	if (!m_fn_glGenVertexArrays)

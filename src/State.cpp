@@ -364,32 +364,10 @@ OOBase::SharedPtr<OOGL::VertexArrayObject> OOGL::State::bind(const OOBase::Share
 		bp.buf_ptr = vao ? vao->m_element_array : OOBase::SharedPtr<BufferObject>();
 		bp.buffer = (bp.buf_ptr ? bp.buf_ptr->m_buffer : 0);
 
-		// Check to see if the GL_ELEMENT_ARRAY_BUFFER binding has actually changed as early Intel drivers didn't
-		static int s_dodgy_vao_bind = -1;
-		if (s_dodgy_vao_bind == -1)
-		{
-			GLint prev = 0;
-			glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING,&prev);
-			
-			m_state_fns->glBindVertexArray(vao ? vao->m_array : 0);
+		m_state_fns->glBindVertexArray(vao ? vao->m_array : 0);
 
-			if (static_cast<GLuint>(prev) != bp.buffer)
-			{
-				GLint curr = 0;
-				glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING,&curr);
-
-				if (static_cast<GLuint>(curr) != bp.buffer)
-					s_dodgy_vao_bind = 1;
-				else
-					s_dodgy_vao_bind = 0;
-			}
-		}
-		else
-		{
-			m_state_fns->glBindVertexArray(vao ? vao->m_array : 0);
-		}
-
-		if (s_dodgy_vao_bind == 1)
+		// Force the GL_ELEMENT_ARRAY_BUFFER binding as early Intel drivers didn't
+		if (!m_state_fns->isGLversion(3,1))
 		{
 			bind_buffer_target(bp.buf_ptr,GL_ELEMENT_ARRAY_BUFFER);
 		}
